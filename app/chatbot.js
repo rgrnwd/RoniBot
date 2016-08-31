@@ -5,8 +5,15 @@ module.exports = {
 var http = require('https');
 var config = require('../config')
 
+function isEmptyObject(obj) {
+  return !Object.keys(obj).length;
+}
+
 function reply(requestContent){
-  console.log('chatbotReply')
+
+  if(isEmptyObject(requestContent)){
+    return -1;
+  }
 
   var channelId = requestContent.fromChannel
   var reply = 'Hello ' + requestContent.content.text;
@@ -35,10 +42,7 @@ function reply(requestContent){
           'X-Line-Trusted-User-With-ACL': config.ChannelMID
       }
   };
-
-  console.log('post data: ', JSON.stringify(post_data))
-  console.log('post options: ', JSON.stringify(post_options))
-
+  
   // Set up the request
   var post_req = http.request(post_options, function(res) {
       res.setEncoding('utf8');
@@ -54,5 +58,7 @@ function reply(requestContent){
   // post the data
   post_req.write(JSON.stringify(post_data));
   post_req.end();
+
+  return 0;
 
 }
