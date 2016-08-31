@@ -31,6 +31,11 @@ app.use(bodyParser.urlencoded({
 extended: true
 }));
 
+app.listen(process.env.PORT || port, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+});
+
+
 app.get('/', function(req, res) {
 
     // ejs render automatically looks in the views folder
@@ -46,8 +51,5 @@ app.post('/callback', function(request, response) {
   	response.end(JSON.stringify('Hello! ' + text)) 
 });
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
-});
 
 
