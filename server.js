@@ -57,9 +57,9 @@ function chatbotReply(requestContent){
 
   // An object of options to indicate where to post to
   var post_options = {
-      host: 'https://api.line.me/v1/events',
+      host: 'https://api.line.me/v1',
       port: '80',
-      //path: '/v1/events',
+      path: '/events',
       method: 'POST',
       headers: {
           'Content-Type': 'application/json; charser=UTF-8',
@@ -86,7 +86,7 @@ function chatbotReply(requestContent){
   });
 
   // post the data
-  post_req.write(post_data);
+  post_req.write(JSON.stringify(post_data));
   post_req.end();
 
 }
