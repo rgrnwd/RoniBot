@@ -1,21 +1,5 @@
 var bodyParser = require('body-parser');
-// var url = require('url')
-// var port = 4444;
-
-// var server = http.createServer(callback)
-// server.listen(process.env.PORT || port, function(){
-// 	console.log('Server started. Listening on port ' + port)
-// })
-
-// function callback(request, response){
-
-// 	var urlData = url.parse(request.url, true)  
-// 	var message = urlData.query.message
-
-// 	console.log("Receive request. Message: " + message)
-//  	response.writeHead(200, { 'Content-Type': 'application/json' }) 
-//  	response.end(JSON.stringify('Hello! ' + message)) 
-// }
+var http = require('http');
 
 var express = require('express');
 var app = express();
@@ -43,12 +27,57 @@ app.get('/', function(request, response) {
 
 app.post('/callback', function(request, response) {
 
-	var text = request.body.result[0].content.text
+	var content = request.body.result[0].content
+	//chatbotReply(content);
 
-	console.log(text)
+	console.log(JSON.stringify(request.body))
+	console.log(content)
 	response.writeHead(200, { 'Content-Type': 'application/json' }) 
-  	response.end(JSON.stringify('Hello! ' + text)) 
+  	response.end(JSON.stringify('Hello! ' + content.text)) 
 });
 
+// function chatbotReply(requestContent){
+// 	console.log('chatbotReply')
 
+// 	var channelId = ''
+// 	var reply = 'Hello ' + requestContent.text;
+
+// 	  var post_data = {
+//       	"to":[requestContent.from],
+//         'toChannel' : channelId,
+// 	      'js_code' : reply
+//   		};
+
+//   // An object of options to indicate where to post to
+//   var post_options = {
+//       host: 'https://api.line.me/v1/events',
+//       port: '80',
+//       //path: '/v1/events',
+//       method: 'POST',
+//       headers: {
+//           'Content-Type': 'application/json; charser=UTF-8',
+//           'X-Line-ChannelID': '',
+//           'X-Line-ChannelSecret': '',
+//           'X-Line-Trusted-User-With-ACL': '',
+//           'Content-Length': Buffer.byteLength(post_data)
+//       }
+//   };
+
+//   // Set up the request
+//   var post_req = http.request(post_options, function(res) {
+//       res.setEncoding('utf8');
+//       res.on('data', function (chunk) {
+//           console.log('Response: ' + chunk);
+//       })
+//       res.on('error', function(err){
+//       	console.log(err);
+//       })
+
+//   });
+
+//   // post the data
+//   post_req.write(post_data);
+//   post_req.end();
+
+// }
 
