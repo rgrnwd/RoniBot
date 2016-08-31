@@ -9,7 +9,7 @@ var config = {
       name: 'app'
     },
     port: process.env.PORT || 8080,
-    channelId: process.env.ChannelId || '',
+    ChannelId: process.env.ChannelId || '',
     ChannelSecret: process.env.ChannelSecret || '',
     ChannelMID: process.env.MID || '',
   },
@@ -20,7 +20,7 @@ var config = {
       name: 'app'
     },
     port: process.env.PORT || 8080,
-    channelId: process.env.ChannelId || '',
+    ChannelId: process.env.ChannelId || '',
     ChannelSecret: process.env.ChannelSecret || '',
     ChannelMID: process.env.MID || ''
     

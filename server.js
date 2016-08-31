@@ -5,6 +5,8 @@ var express = require('express');
 var app = express();
 var port = process.env.PORT || 8080;
 
+var config = require('./config')
+
 // app.set('port', (process.env.PORT || port));
 app.set('view engine', 'ejs');
 
@@ -61,9 +63,9 @@ function chatbotReply(requestContent){
       method: 'POST',
       headers: {
           'Content-Type': 'application/json; charser=UTF-8',
-          'X-Line-ChannelID': '',
-          'X-Line-ChannelSecret': '',
-          'X-Line-Trusted-User-With-ACL': '',
+          'X-Line-ChannelID': config.ChannelId,
+          'X-Line-ChannelSecret': config.ChannelSecret,
+          'X-Line-Trusted-User-With-ACL': config.ChannelMID,
           'Content-Length': Buffer.byteLength(post_data)
       }
   };
