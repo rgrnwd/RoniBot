@@ -137,10 +137,18 @@ describe('Chatbot', function() {
         assert(write.withArgs(generateExpectedResult(text)).calledOnce);
      });
 
-     it('should return sticker when receive give me a sticker', function(){
+     it('should return sticker when receive a message containing sticker', function(){
          
-        var response = chatbot.reply(generateRequestTextContent("give me a sticker"))
+        var response = chatbot.reply(generateRequestTextContent("give me a sticker now!!!"))
         assert(write.withArgs(generateExpectedStickerResult()).calledOnce);
+     });
+
+    it('should return account balance when message containing account balance', function(){
+        
+        var text = "You have 50,000,000 baht"
+
+        var response = chatbot.reply(generateRequestTextContent("give me a my account balance"))
+        assert(write.withArgs(generateExpectedResult(text)).calledOnce);
      });
 
     });

@@ -14,7 +14,13 @@ function generateReplyMessage(content){
   var reply = "I don't know"
 
   if(content.contentType == 1){
-    reply = 'Hello ' + content.text
+
+    if(content.text.indexOf("account balance") > -1 || content.text.indexOf("ยอด") > -1){
+      reply = "You have 50,000,000 baht"
+    }
+    else{
+      reply = 'Hello ' + content.text
+    }
   }
   else if(content.contentType == 8){
     switch (content.contentMetadata.STKID){
@@ -58,7 +64,7 @@ function generateReply(content){
       };
   }
   
-    return {
+  return {
         "to":[content.from],
         'toChannel' : 1383378250,
         "eventType" : "138311608800106203",
