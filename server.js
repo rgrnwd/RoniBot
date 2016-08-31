@@ -22,6 +22,7 @@ var app = express();
 var port = process.env.PORT || 8080;
 
 app.set('port', (process.env.PORT || port));
+app.set('view engine', 'ejs');
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json({limit: '50mb'}));
