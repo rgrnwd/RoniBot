@@ -31,7 +31,7 @@ app.post('/callback', function(request, response) {
 	//chatbotReply(content);
 
 	console.log(JSON.stringify(request.body))
-	console.log(content)
+	//console.log(content)
 	response.writeHead(200, { 'Content-Type': 'application/json' }) 
   	response.end(JSON.stringify('Hello! ' + content.text)) 
 });
