@@ -18,15 +18,16 @@ describe('Chatbot', function() {
             }}
     }
 
-    function generateRequestStickerContent(){
+    function generateRequestStickerContent(stickerId){
         return{
             'fromChannel' : 1,
             'content' : {
                 'from' : '',
                 'contentType': 8,
 			    "contentMetadata":{
-			      "STKID":"3",
-			      "STKPKGID":"332",
+                  "STKID": stickerId,
+			      "STKTXT": 'SomeText',
+			      "STKPKGID":"1",
 			      "STKVER":"100"
 			    }
             }}
@@ -74,15 +75,61 @@ describe('Chatbot', function() {
      });
 
 
-     it('should reply I like that sticker when receive sticker', function(){
+     it('should reply I like that sticker when receiving unknown sticker', function(){
      	
         var text = 'I like that sticker'
      	var request = new PassThrough();
 		var write = sinon.spy(request, 'write');
 		this.request.returns(request);
 		 
-     	var response = chatbot.reply(generateRequestStickerContent())
+     	var response = chatbot.reply(generateRequestStickerContent(123))
 		assert(write.withArgs(JSON.stringify(generateExpectedResult(text))).calledOnce);
+     });
+
+     it('should send specific reply when receive first recognised sticker', function(){
+        
+        var text = "You know I can't resist that look..."
+        var request = new PassThrough();
+        var write = sinon.spy(request, 'write');
+        this.request.returns(request);
+         
+        var response = chatbot.reply(generateRequestStickerContent("4"))
+        assert(write.withArgs(JSON.stringify(generateExpectedResult(text))).calledOnce);
+     });
+
+     it('should send different reply when receive second recognised sticker', function(){
+        
+        var text = "YEAH RIGHT!"
+        var request = new PassThrough();
+        var write = sinon.spy(request, 'write');
+        this.request.returns(request);
+         
+        var response = chatbot.reply(generateRequestStickerContent("13"))
+        assert(write.withArgs(JSON.stringify(generateExpectedResult(text))).calledOnce);
+     });
+
+
+     it('should send different reply when receive second recognised sticker', function(){
+        
+        var text = "What are you smiling at?"
+        var request = new PassThrough();
+        var write = sinon.spy(request, 'write');
+        this.request.returns(request);
+         
+        var response = chatbot.reply(generateRequestStickerContent("2"))
+        assert(write.withArgs(JSON.stringify(generateExpectedResult(text))).calledOnce);
+     });
+
+
+     it('should send different reply when receive second recognised sticker', function(){
+        
+        var text = "What have you been up to??"
+        var request = new PassThrough();
+        var write = sinon.spy(request, 'write');
+        this.request.returns(request);
+         
+        var response = chatbot.reply(generateRequestStickerContent("10"))
+        assert(write.withArgs(JSON.stringify(generateExpectedResult(text))).calledOnce);
      });
 
     });

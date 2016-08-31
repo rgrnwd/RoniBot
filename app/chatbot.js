@@ -11,15 +11,32 @@ function isEmptyObject(obj) {
 
 function generateReply(content){
 
+  var reply = "I don't know"
+
   if(content.contentType == 1){
-    return 'Hello ' + content.text
+    reply = 'Hello ' + content.text
   }
   else if(content.contentType == 8){
-    console.log(JSON.stringify(content.contentMetadata))
-    return 'I like that sticker'
+    switch (content.contentMetadata.STKID){
+      case "4":
+        reply = "You know I can't resist that look..."
+        break;
+      case "13":
+        reply = "YEAH RIGHT!";
+        break;
+      case "2":
+        reply = "What are you smiling at?";
+        break;
+      case "10":
+        reply = "What have you been up to??";
+        break;
+      default:
+        reply = 'I like that sticker'
+        break;
+    }
   }
 
-  return "I don't know"
+  return reply
 }
 
 function reply(requestContent){
@@ -67,7 +84,6 @@ function reply(requestContent){
       })
 
   });
-
   // post the data
   post_req.write(JSON.stringify(post_data));
   post_req.end();
