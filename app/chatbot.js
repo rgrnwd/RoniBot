@@ -9,6 +9,18 @@ function isEmptyObject(obj) {
   return !Object.keys(obj).length;
 }
 
+function generateReply(content){
+
+  if(content.contentType == 1){
+    return 'Hello ' + content.text
+  }
+  else if(content.contentType == 8){
+    return 'I like that sticker'
+  }
+
+  return "I don't know"
+}
+
 function reply(requestContent){
 
   if(isEmptyObject(requestContent)){
@@ -16,7 +28,7 @@ function reply(requestContent){
   }
 
   var channelId = requestContent.fromChannel
-  var reply = 'Hello ' + requestContent.content.text;
+  var reply = generateReply(requestContent.content);
 
   var post_data = {
         "to":[requestContent.content.from],

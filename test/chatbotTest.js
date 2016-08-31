@@ -8,12 +8,27 @@ describe('Chatbot', function() {
 
 	var server
 
-    function generateRequestContent(text){
+    function generateRequestTextContent(text){
         return{
             'fromChannel' : 1,
             'content' : {
                 'from' : '',
-                'text' : text
+                'text' : text,
+                'contentType': 1,
+            }}
+    }
+
+    function generateRequestStickerContent(){
+        return{
+            'fromChannel' : 1,
+            'content' : {
+                'from' : '',
+                'contentType': 8,
+			    "contentMetadata":{
+			      "STKID":"3",
+			      "STKPKGID":"332",
+			      "STKVER":"100"
+			    }
             }}
     }
 
@@ -26,7 +41,7 @@ describe('Chatbot', function() {
             "content":{
                 "contentType":1,
                 "toType":1,
-                "text": 'Hello ' + text
+                "text": text
                 }
         };
     }
@@ -54,7 +69,19 @@ describe('Chatbot', function() {
 		var write = sinon.spy(request, 'write');
 		this.request.returns(request);
 		 
-     	var response = chatbot.reply(generateRequestContent(text))
+     	var response = chatbot.reply(generateRequestTextContent(text))
+		assert(write.withArgs(JSON.stringify(generateExpectedResult('Hello '+text))).calledOnce);
+     });
+
+
+     it('should reply I like that sticker when receive sticker', function(){
+     	
+        var text = 'I like that sticker'
+     	var request = new PassThrough();
+		var write = sinon.spy(request, 'write');
+		this.request.returns(request);
+		 
+     	var response = chatbot.reply(generateRequestStickerContent())
 		assert(write.withArgs(JSON.stringify(generateExpectedResult(text))).calledOnce);
      });
 
