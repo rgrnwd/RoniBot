@@ -19,8 +19,9 @@ var bodyParser = require('body-parser');
 
 var express = require('express');
 var app = express();
+var port = process.env.PORT || 8080;
 
-app.set('port', (process.env.PORT || 4444));
+app.set('port', (process.env.PORT || port));
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json({limit: '50mb'}));
@@ -28,6 +29,12 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(bodyParser.urlencoded({
 extended: true
 }));
+
+app.get('/', function(req, res) {
+
+    // ejs render automatically looks in the views folder
+    res.render('index');
+});
 
 app.post('/callback', function(request, response) {
 
