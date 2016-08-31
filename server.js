@@ -1,5 +1,5 @@
 var bodyParser = require('body-parser');
-var http = require('http');
+var http = require('https');
 
 var express = require('express');
 var app = express();
@@ -32,7 +32,7 @@ app.post('/callback', function(request, response) {
 	var content = request.body.result[0]
 	chatbotReply(content);
 
-	console.log(JSON.stringify(request.body))
+	//console.log(JSON.stringify(request.body))
 	//console.log(content)
 	response.writeHead(200, { 'Content-Type': 'application/json' }) 
   	response.end(JSON.stringify('Hello! ' + content.content.text)) 
@@ -58,29 +58,28 @@ function chatbotReply(requestContent){
   // An object of options to indicate where to post to
   var post_options = {
       host: 'trialbot-api.line.me',
-      port: '80',
+      port: '443',
       path: '/v1/events',
       method: 'POST',
       headers: {
           'Content-Type': 'application/json; charser=UTF-8',
           'X-Line-ChannelID': config.ChannelId,
           'X-Line-ChannelSecret': config.ChannelSecret,
-          'X-Line-Trusted-User-With-ACL': config.ChannelMID,
-          'Content-Length': Buffer.byteLength(post_data)
+          'X-Line-Trusted-User-With-ACL': config.ChannelMID
       }
   };
 
-  console.log(JSON.stringify(post_data))
-  console.log(JSON.stringify(post_options))
+  console.log('post data: ', JSON.stringify(post_data))
+  console.log('post options: ', JSON.stringify(post_options))
 
   // Set up the request
   var post_req = http.request(post_options, function(res) {
       res.setEncoding('utf8');
       res.on('data', function (chunk) {
-          console.log('Response: ' + chunk);
+          console.log('Response: ' + JSON.stringify(chunk));
       })
       res.on('error', function(err){
-      	console.log(err);
+      	console.log('Error: ', err);
       })
 
   });
