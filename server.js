@@ -30,9 +30,12 @@ extended: true
 }));
 
 app.post('/callback', function(request, response) {
-	console.log(request.body)
+
+	var text = request.body.result[0].content.text
+
+	console.log(text)
 	response.writeHead(200, { 'Content-Type': 'application/json' }) 
-  	response.end(JSON.stringify('Hello! ' )) 
+  	response.end(JSON.stringify('Hello! ' + text)) 
 });
 
 app.listen(app.get('port'), function() {

@@ -20,6 +20,7 @@
   "keywords": [
     "node",
     "heroku",
-    "express"
+    "express",
+    "body-parser"
   ]
 }
