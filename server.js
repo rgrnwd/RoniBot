@@ -3,7 +3,7 @@ var url = require('url')
 var port = 4444;
 
 var server = http.createServer(callback)
-server.listen(port, function(){
+server.listen(process.env.PORT || port, function(){
 	console.log('Server started. Listening on port ' + port)
 })
 
