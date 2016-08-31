@@ -8,7 +8,8 @@ server.listen(process.env.PORT || port, function(){
 })
 
 function callback(request, response){
-	
+
+	console.log("Receive request : "+request)
  	response.writeHead(200, { 'Content-Type': 'application/json' }) 
  	response.end(JSON.stringify('Hello!')) 
 }
