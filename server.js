@@ -46,8 +46,8 @@ function chatbotReply(requestContent){
 
 	  var post_data = {
       	"to":[requestContent.from],
-        'toChannel' : "1383378250",
-        "eventType" : "140177271400161403",
+        'toChannel' : 1383378250,
+        "eventType" : "138311608800106203",
 	    "content":{
 		    "contentType":1,
 		    "toType":1,
