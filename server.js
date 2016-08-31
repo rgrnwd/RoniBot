@@ -1,13 +1,10 @@
 var bodyParser = require('body-parser');
-var http = require('https');
-
+var config = require('./config')
+var chatbot = require('./app/chatbot')
 var express = require('express');
+
 var app = express();
 var port = process.env.PORT || 8080;
-
-var config = require('./config')
-
-var chatbot = require('app/chatbot')
 
 // app.set('port', (process.env.PORT || port));
 app.set('view engine', 'ejs');

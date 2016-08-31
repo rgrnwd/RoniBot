@@ -2,6 +2,9 @@ module.exports = {
   reply : reply
 }
 
+var http = require('https');
+var config = require('../config')
+
 function reply(requestContent){
   console.log('chatbotReply')
 
