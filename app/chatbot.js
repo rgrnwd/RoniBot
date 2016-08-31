@@ -15,6 +15,7 @@ function generateReply(content){
     return 'Hello ' + content.text
   }
   else if(content.contentType == 8){
+    console.log(JSON.stringify(content.contentMetadata))
     return 'I like that sticker'
   }
 
