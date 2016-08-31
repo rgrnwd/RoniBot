@@ -10,7 +10,7 @@ server.listen(process.env.PORT || port, function(){
 function callback(request, response){
 
 	var urlData = url.parse(request.url, true)  
-	var message = new Date(urlData.query.message)
+	var message = urlData.query.message
 
 	console.log("Receive request. Message: " + message)
  	response.writeHead(200, { 'Content-Type': 'application/json' }) 
