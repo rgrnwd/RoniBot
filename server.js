@@ -1,9 +1,10 @@
 var http = require('http')
 var url = require('url')
+var port = 4444;
 
 var server = http.createServer(callback)
-server.listen(4444, '127.0.0.1')
-
+server.listen(port, '127.0.0.1')
+console.log('Server started. Listening on port ' + port)
 
 function callback(request, response){
 	
