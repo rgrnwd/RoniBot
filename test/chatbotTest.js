@@ -9,7 +9,7 @@ describe('Chatbot', function() {
 	var server
 
     function generateRequestTextContent(text){
-        return{
+        return {
             'fromChannel' : 1,
             'content' : {
                 'from' : '',
@@ -35,7 +35,7 @@ describe('Chatbot', function() {
 
     function generateExpectedResult(text){
 
-        return {
+        return JSON.stringify({
             "to":[''],
             'toChannel' : 1383378250,
             "eventType" : "138311608800106203",
@@ -44,11 +44,16 @@ describe('Chatbot', function() {
                 "toType":1,
                 "text": text
                 }
-        };
+        });
     }
+
+    var write
 
 	beforeEach(function() {
     	this.request = sinon.stub(http, 'request');
+     	var request = new PassThrough();
+		write = sinon.spy(request, 'write');
+		this.request.returns(request);
     });
 
     afterEach(function() {
@@ -66,70 +71,52 @@ describe('Chatbot', function() {
      it('should reply Hello John when receive valid json with text John', function(){
      	
         var text = 'John'
-     	var request = new PassThrough();
-		var write = sinon.spy(request, 'write');
-		this.request.returns(request);
 		 
      	var response = chatbot.reply(generateRequestTextContent(text))
-		assert(write.withArgs(JSON.stringify(generateExpectedResult('Hello '+text))).calledOnce);
+		assert(write.withArgs(generateExpectedResult('Hello '+text)).calledOnce);
      });
 
 
      it('should reply I like that sticker when receiving unknown sticker', function(){
      	
         var text = 'I like that sticker'
-     	var request = new PassThrough();
-		var write = sinon.spy(request, 'write');
-		this.request.returns(request);
 		 
      	var response = chatbot.reply(generateRequestStickerContent(123))
-		assert(write.withArgs(JSON.stringify(generateExpectedResult(text))).calledOnce);
+		assert(write.withArgs(generateExpectedResult(text)).calledOnce);
      });
 
      it('should send specific reply when receive first recognised sticker', function(){
         
         var text = "You know I can't resist that look..."
-        var request = new PassThrough();
-        var write = sinon.spy(request, 'write');
-        this.request.returns(request);
-         
+
         var response = chatbot.reply(generateRequestStickerContent("4"))
-        assert(write.withArgs(JSON.stringify(generateExpectedResult(text))).calledOnce);
+        assert(write.withArgs(generateExpectedResult(text)).calledOnce);
      });
 
      it('should send different reply when receive second recognised sticker', function(){
         
         var text = "YEAH RIGHT!"
-        var request = new PassThrough();
-        var write = sinon.spy(request, 'write');
-        this.request.returns(request);
-         
+
         var response = chatbot.reply(generateRequestStickerContent("13"))
-        assert(write.withArgs(JSON.stringify(generateExpectedResult(text))).calledOnce);
+        assert(write.withArgs(generateExpectedResult(text)).calledOnce);
      });
 
 
      it('should send different reply when receive second recognised sticker', function(){
         
         var text = "What are you smiling at?"
-        var request = new PassThrough();
-        var write = sinon.spy(request, 'write');
-        this.request.returns(request);
          
         var response = chatbot.reply(generateRequestStickerContent("2"))
-        assert(write.withArgs(JSON.stringify(generateExpectedResult(text))).calledOnce);
+        assert(write.withArgs(generateExpectedResult(text)).calledOnce);
      });
 
 
      it('should send different reply when receive second recognised sticker', function(){
         
         var text = "What have you been up to??"
-        var request = new PassThrough();
-        var write = sinon.spy(request, 'write');
-        this.request.returns(request);
          
         var response = chatbot.reply(generateRequestStickerContent("10"))
-        assert(write.withArgs(JSON.stringify(generateExpectedResult(text))).calledOnce);
+        assert(write.withArgs(generateExpectedResult(text)).calledOnce);
      });
 
     });
