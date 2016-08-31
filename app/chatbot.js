@@ -18,7 +18,7 @@ function reply(requestContent){
   var channelId = requestContent.fromChannel
   var reply = 'Hello ' + requestContent.content.text;
 
-    var post_data = {
+  var post_data = {
         "to":[requestContent.content.from],
         'toChannel' : 1383378250,
         "eventType" : "138311608800106203",
@@ -42,7 +42,7 @@ function reply(requestContent){
           'X-Line-Trusted-User-With-ACL': config.ChannelMID
       }
   };
-  
+
   // Set up the request
   var post_req = http.request(post_options, function(res) {
       res.setEncoding('utf8');
