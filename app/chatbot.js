@@ -41,7 +41,7 @@ function generateReplyMessage(content){
 
 function generateReply(content){
 
-  if(content.contentType == 1 && content.text == "give me a sticker"){
+  if(content.contentType == 1 && content.text.indexOf("sticker") > -1){
     return {
         "to":[content.from],
         'toChannel' : 1383378250,
