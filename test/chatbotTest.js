@@ -47,6 +47,24 @@ describe('Chatbot', function() {
         });
     }
 
+    function generateExpectedStickerResult(){
+
+    	return JSON.stringify({
+            "to":[''],
+            'toChannel' : 1383378250,
+            "eventType" : "138311608800106203",
+            "content":{
+                'contentType': 8,
+			    "contentMetadata":{
+                  "STKID": "3",
+			      "STKPKGID":"1",
+			      "STKVER":"100"
+			    },
+                "toType":1
+                }
+        });
+    }
+
     var write
 
 	beforeEach(function() {
@@ -102,7 +120,7 @@ describe('Chatbot', function() {
      });
 
 
-     it('should send different reply when receive second recognised sticker', function(){
+     it('should send different reply when receive third recognised sticker', function(){
         
         var text = "What are you smiling at?"
          
@@ -111,12 +129,18 @@ describe('Chatbot', function() {
      });
 
 
-     it('should send different reply when receive second recognised sticker', function(){
+     it('should send different reply when receive fourth recognised sticker', function(){
         
         var text = "What have you been up to??"
          
         var response = chatbot.reply(generateRequestStickerContent("10"))
         assert(write.withArgs(generateExpectedResult(text)).calledOnce);
+     });
+
+     it('should return sticker when receive give me a sticker', function(){
+         
+        var response = chatbot.reply(generateRequestTextContent("give me a sticker"))
+        assert(write.withArgs(generateExpectedStickerResult()).calledOnce);
      });
 
     });

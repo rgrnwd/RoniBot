@@ -9,7 +9,7 @@ function isEmptyObject(obj) {
   return !Object.keys(obj).length;
 }
 
-function generateReply(content){
+function generateReplyMessage(content){
 
   var reply = "I don't know"
 
@@ -39,6 +39,38 @@ function generateReply(content){
   return reply
 }
 
+function generateReply(content){
+
+  if(content.contentType == 1 && content.text == "give me a sticker"){
+    return {
+        "to":[content.from],
+        'toChannel' : 1383378250,
+        "eventType" : "138311608800106203",
+        "content":{
+          'contentType': 8,
+          "contentMetadata":{
+            "STKID": "3",
+            "STKPKGID":"1",
+            "STKVER":"100"
+          },
+          "toType":1
+        }
+      };
+  }
+  
+    return {
+        "to":[content.from],
+        'toChannel' : 1383378250,
+        "eventType" : "138311608800106203",
+        "content":{
+          "contentType":1,
+          "toType":1,
+          "text": generateReplyMessage(content)
+        }
+      };
+
+}
+
 function reply(requestContent){
 
   if(isEmptyObject(requestContent)){
@@ -46,18 +78,8 @@ function reply(requestContent){
   }
 
   var channelId = requestContent.fromChannel
-  var reply = generateReply(requestContent.content);
 
-  var post_data = {
-        "to":[requestContent.content.from],
-        'toChannel' : 1383378250,
-        "eventType" : "138311608800106203",
-      "content":{
-        "contentType":1,
-        "toType":1,
-        "text": reply
-      }
-      };
+  var post_data = generateReply(requestContent.content)
 
   // An object of options to indicate where to post to
   var post_options = {
