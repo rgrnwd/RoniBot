@@ -57,9 +57,9 @@ function chatbotReply(requestContent){
 
   // An object of options to indicate where to post to
   var post_options = {
-      host: 'https://api.line.me/v1',
+      host: 'trialbot-api.line.me',
       port: '80',
-      path: '/events',
+      path: '/v1/events',
       method: 'POST',
       headers: {
           'Content-Type': 'application/json; charser=UTF-8',
