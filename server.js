@@ -27,57 +27,62 @@ app.get('/', function(request, response) {
 
 app.post('/callback', function(request, response) {
 
-	var content = request.body.result[0].content
-	//chatbotReply(content);
+	var content = request.body.result[0]
+	chatbotReply(content);
 
 	console.log(JSON.stringify(request.body))
 	//console.log(content)
 	response.writeHead(200, { 'Content-Type': 'application/json' }) 
-  	response.end(JSON.stringify('Hello! ' + content.text)) 
+  	response.end(JSON.stringify('Hello! ' + content.content.text)) 
 });
 
-// function chatbotReply(requestContent){
-// 	console.log('chatbotReply')
+function chatbotReply(requestContent){
+	console.log('chatbotReply')
 
-// 	var channelId = ''
-// 	var reply = 'Hello ' + requestContent.text;
+	var channelId = requestContent.fromChannel
+	var reply = 'Hello ' + requestContent.content.text;
 
-// 	  var post_data = {
-//       	"to":[requestContent.from],
-//         'toChannel' : channelId,
-// 	      'js_code' : reply
-//   		};
+	  var post_data = {
+      	"to":[requestContent.from],
+        'toChannel' : channelId,
+        "eventType" : requestContent.eventType,
+	    "content":{
+		    "contentType":1,
+		    "toType":1,
+		    "text": reply
+		  }
+  		};
 
-//   // An object of options to indicate where to post to
-//   var post_options = {
-//       host: 'https://api.line.me/v1/events',
-//       port: '80',
-//       //path: '/v1/events',
-//       method: 'POST',
-//       headers: {
-//           'Content-Type': 'application/json; charser=UTF-8',
-//           'X-Line-ChannelID': '',
-//           'X-Line-ChannelSecret': '',
-//           'X-Line-Trusted-User-With-ACL': '',
-//           'Content-Length': Buffer.byteLength(post_data)
-//       }
-//   };
+  // An object of options to indicate where to post to
+  var post_options = {
+      host: 'https://api.line.me/v1/events',
+      port: '80',
+      //path: '/v1/events',
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json; charser=UTF-8',
+          'X-Line-ChannelID': '',
+          'X-Line-ChannelSecret': '',
+          'X-Line-Trusted-User-With-ACL': '',
+          'Content-Length': Buffer.byteLength(post_data)
+      }
+  };
 
-//   // Set up the request
-//   var post_req = http.request(post_options, function(res) {
-//       res.setEncoding('utf8');
-//       res.on('data', function (chunk) {
-//           console.log('Response: ' + chunk);
-//       })
-//       res.on('error', function(err){
-//       	console.log(err);
-//       })
+  // Set up the request
+  var post_req = http.request(post_options, function(res) {
+      res.setEncoding('utf8');
+      res.on('data', function (chunk) {
+          console.log('Response: ' + chunk);
+      })
+      res.on('error', function(err){
+      	console.log(err);
+      })
 
-//   });
+  });
 
-//   // post the data
-//   post_req.write(post_data);
-//   post_req.end();
+  // post the data
+  post_req.write(post_data);
+  post_req.end();
 
-// }
+}
 
