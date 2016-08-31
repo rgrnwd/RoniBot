@@ -8,6 +8,29 @@ describe('Chatbot', function() {
 
 	var server
 
+    function generateRequestContent(text){
+        return{
+            'fromChannel' : 1,
+            'content' : {
+                'from' : '',
+                'text' : text
+            }}
+    }
+
+    function generateExpectedResult(text){
+
+        return {
+            "to":[''],
+            'toChannel' : 1383378250,
+            "eventType" : "138311608800106203",
+            "content":{
+                "contentType":1,
+                "toType":1,
+                "text": 'Hello ' + text
+                }
+        };
+    }
+
 	beforeEach(function() {
     	this.request = sinon.stub(http, 'request');
     });
@@ -25,30 +48,14 @@ describe('Chatbot', function() {
      });
 
      it('should reply Hello John when receive valid json with text John', function(){
-     	var validJson = {
-     		'fromChannel' : 1,
-     		'content' : {
-     			'from' : '',
-     			'text' : 'John'
-     		}}
      	
-     	var expected = {
-		    "to":[''],
-		    'toChannel' : 1383378250,
-		    "eventType" : "138311608800106203",
-		    "content":{
-			    "contentType":1,
-			    "toType":1,
-			    "text": 'Hello John'
-			    }
-		};
-
+        var text = 'John'
      	var request = new PassThrough();
 		var write = sinon.spy(request, 'write');
 		this.request.returns(request);
 		 
-     	var response = chatbot.reply(validJson)
-		assert(write.withArgs(JSON.stringify(expected)).calledOnce);
+     	var response = chatbot.reply(generateRequestContent(text))
+		assert(write.withArgs(JSON.stringify(generateExpectedResult(text))).calledOnce);
      });
 
     });
