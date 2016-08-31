@@ -45,7 +45,7 @@ function chatbotReply(requestContent){
 	var reply = 'Hello ' + requestContent.content.text;
 
 	  var post_data = {
-      	"to":[requestContent.from],
+      	"to":[requestContent.content.from],
         'toChannel' : 1383378250,
         "eventType" : "138311608800106203",
 	    "content":{
