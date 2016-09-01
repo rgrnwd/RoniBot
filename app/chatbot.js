@@ -4,11 +4,12 @@ module.exports = {
 
 var http = require('https');
 var config = require('../config')
-var reply = require('../app/chatbot-reply')
+var lineEvent = require('./lineEvent')
+var messageContent = require('./messageContent')
 
 function reply(requestContent){
 
-  if(isValid(requestContent)){
+  if(messageContent.isValid(requestContent)){
     return -1;
   }
 
@@ -23,38 +24,50 @@ function reply(requestContent){
 
   });
 
-  request.write(JSON.stringify(generateReply(requestContent.content)));
+  request.write(generateBotReply(requestContent.content));
   request.end();
 
   return 0;
 }
 
-function determineReplyMessage(content){
+function generateBotReply(content){
+
+  var jsonReply = "";
+
+  if (returnSticker(content)){
+    jsonReply = lineEvent.newStickerMessage([content.from]);
+  }
+  else{
+    jsonReply = lineEvent.newTextMessage([content.from], getBotReplyMessage(content));
+  }
+
+  return JSON.stringify(jsonReply);
+}
+
+function getBotReplyMessage(content){
 
   var reply = "I don't know"
 
-  if(isContentTypeText(content.contentType)){
+  if(messageContent.isText(content.contentType)){
 
-    if(findKeyword(content.text, ["account balance","ยอด"])){
+    if(messageContent.containsKeyword(content.text, ["account balance","ยอด"])){
       reply = "You have 50,000,000 baht"
     }
     else{
       reply = 'Hello ' + content.text
     }
   }
-  else if(isContentTypeSticker(content.contentType)){
+  else if(messageContent.isSticker(content.contentType)){
     reply = stickerStandardReply(content.contentMetadata.STKID);
   }
 
   return reply
 }
 
-function isValid(object) {
-  return !Object.keys(object).length;
-}
-
 function returnSticker(content){
-  return isContentTypeText(content.contentType) && content.text.indexOf("sticker") > -1;
+
+  return messageContent.isText(content.contentType) && 
+         messageContent.containsKeyword(content.text, ["sticker"]);
 }
 
 function stickerStandardReply(stickerId){
@@ -71,22 +84,6 @@ function stickerStandardReply(stickerId){
     return reply;
 }
 
-function findKeyword(content, keywords){
-  var keywordFound = false;
-  keywords.forEach(function(keyword){
-      if (content.indexOf(keyword) > -1){
-        keywordFound = true;
-      }
-    });
-  return keywordFound;
-}
-function isContentTypeSticker(contentType){
-  return contentType == 8;
-}
-function isContentTypeText(contentType){
-  return contentType == 1;
-}
-
 function postRequestOptions(){
   return {
     host: config.LineAPI,
@@ -100,13 +97,4 @@ function postRequestOptions(){
       'X-Line-Trusted-User-With-ACL': config.ChannelMID
     }
   };
-}
-function generateReply(content){
-
-  if (returnSticker(content)){
-    return reply.generateSticker([content.from]);
-  }
-  else{
-    return reply.generateText([content.from], determineReplyMessage(content));
-  }
 }

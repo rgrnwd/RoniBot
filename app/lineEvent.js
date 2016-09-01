@@ -1,8 +1,8 @@
 module.exports = {
-  generateSticker : generateStickerReply,
-  generateText : generateTextReply
+  newStickerMessage : newStickerMessage,
+  newTextMessage : newTextMessage
 }
-function generateStickerReply(recipients){
+function newStickerMessage(recipients){
   return {
     "to":recipients,
     'toChannel' : 1383378250,
@@ -19,7 +19,7 @@ function generateStickerReply(recipients){
   };
 }
 
-function generateTextReply(recipients, message){
+function newTextMessage(recipients, content){
   return {
     "to":recipients,
     'toChannel' : 1383378250,
@@ -27,7 +27,7 @@ function generateTextReply(recipients, message){
     "content":{
       "contentType":1,
       "toType":1,
-      "text": message
+      "text": content
     }
   };
 }
