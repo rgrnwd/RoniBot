@@ -89,18 +89,18 @@ describe('Chatbot', function() {
 
     it('should return account balance when message containing account balance in English', function(){
         
-        var text = "You have 50,000,000 baht"
+        var text = "Your account balance is"
 
         var response = chatbot.reply(request.generateTextRequest("give me a my account balance"))
-        assert(write.withArgs(expectedResult.textResult(text)).calledOnce);
+        assert(JSON.stringify(write.args[0]).indexOf(text)> -1);
      });
 
     it('should return account balance when message containing account balance in Thai', function(){
         
-        var text = "You have 50,000,000 baht"
+        var text = "Your account balance is"
 
         var response = chatbot.reply(request.generateTextRequest("ยอดยอด"))
-        assert(write.withArgs(expectedResult.textResult(text)).calledOnce);
+        assert(JSON.stringify(write.args[0]).indexOf(text)> -1);
      });
 
     });

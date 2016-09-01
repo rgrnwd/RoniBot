@@ -50,7 +50,8 @@ function getBotReplyMessage(content){
   if(messageContent.isText(content.contentType)){
 
     if(messageContent.containsKeyword(content.text, ["account balance","ยอด"])){
-      reply = "You have 50,000,000 baht"
+      var howMuch = Math.floor(Math.random() * 1000000) + 1  
+      reply = "Your account balance is " + howMuch.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " baht"
     }
     else{
       reply = 'Hello ' + content.text
