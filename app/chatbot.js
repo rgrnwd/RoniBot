@@ -3,17 +3,16 @@ module.exports = {
 }
 
 var http = require('https');
-var config = require('../config')
-var lineEvent = require('./lineEvent')
+var LINEEvent = require('./LINEEvent')
 var messageContent = require('./messageContent')
 
 function reply(requestContent){
 
-  if(messageContent.isValid(requestContent)){
+  if(!messageContent.isValid(requestContent)){
     return -1;
   }
 
-  var request = http.request(postRequestOptions(), function(res) {
+  var request = http.request(LINEEvent.postRequestOptions(), function(res) {
       res.setEncoding('utf8');
       res.on('data', function (chunk) {
           console.log('Response: ' + JSON.stringify(chunk));
@@ -35,10 +34,10 @@ function generateBotReply(content){
   var jsonReply = "";
 
   if (returnSticker(content)){
-    jsonReply = lineEvent.newStickerMessage([content.from]);
+    jsonReply = LINEEvent.newStickerMessage([content.from]);
   }
   else{
-    jsonReply = lineEvent.newTextMessage([content.from], getBotReplyMessage(content));
+    jsonReply = LINEEvent.newTextMessage([content.from], getBotReplyMessage(content));
   }
 
   return JSON.stringify(jsonReply);
@@ -84,17 +83,3 @@ function stickerStandardReply(stickerId){
     return reply;
 }
 
-function postRequestOptions(){
-  return {
-    host: config.LineAPI,
-    port: config.LineAPIPort,
-    path: config.LineAPIPath,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charser=UTF-8',
-      'X-Line-ChannelID': config.ChannelId,
-      'X-Line-ChannelSecret': config.ChannelSecret,
-      'X-Line-Trusted-User-With-ACL': config.ChannelMID
-    }
-  };
-}

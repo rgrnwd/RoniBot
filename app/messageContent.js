@@ -6,15 +6,16 @@ module.exports = {
 }
 function containsKeyword(content, keywords){
   var keywordFound = false;
+  var contentIgnoreCase = content.toLowerCase();
   keywords.forEach(function(keyword){
-      if (content.indexOf(keyword) > -1){
+      if (contentIgnoreCase.indexOf(keyword.toLowerCase()) > -1){
         keywordFound = true;
       }
     });
   return keywordFound;
 }
 function isValid(object) {
-  return !Object.keys(object).length;
+  return Object.keys(object).length;
 }
 function isContentTypeSticker(contentType){
   return contentType == 8;

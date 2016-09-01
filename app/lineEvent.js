@@ -1,7 +1,10 @@
 module.exports = {
   newStickerMessage : newStickerMessage,
-  newTextMessage : newTextMessage
+  newTextMessage : newTextMessage,
+  postRequestOptions : postRequestOptions
 }
+var config = require('../config')
+
 function newStickerMessage(recipients){
   return {
     "to":recipients,
@@ -28,6 +31,21 @@ function newTextMessage(recipients, content){
       "contentType":1,
       "toType":1,
       "text": content
+    }
+  };
+}
+
+function postRequestOptions(){
+  return {
+    host: config.LineAPI,
+    port: config.LineAPIPort,
+    path: config.LineAPIPath,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json; charser=UTF-8',
+      'X-Line-ChannelID': config.ChannelId,
+      'X-Line-ChannelSecret': config.ChannelSecret,
+      'X-Line-Trusted-User-With-ACL': config.ChannelMID
     }
   };
 }
