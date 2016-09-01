@@ -4,118 +4,109 @@ module.exports = {
 
 var http = require('https');
 var config = require('../config')
+var reply = require('../app/chatbot-reply')
 
-function isEmptyObject(obj) {
-  return !Object.keys(obj).length;
+function reply(requestContent){
+
+  if(isValid(requestContent)){
+    return -1;
+  }
+
+  var request = http.request(postRequestOptions(), function(res) {
+      res.setEncoding('utf8');
+      res.on('data', function (chunk) {
+          console.log('Response: ' + JSON.stringify(chunk));
+      })
+      res.on('error', function(err){
+        console.error('Error: ', err);
+      })
+
+  });
+
+  request.write(JSON.stringify(generateReply(requestContent.content)));
+  request.end();
+
+  return 0;
 }
 
-function generateReplyMessage(content){
+function determineReplyMessage(content){
 
   var reply = "I don't know"
 
-  if(content.contentType == 1){
+  if(isContentTypeText(content.contentType)){
 
-    if(content.text.indexOf("account balance") > -1 || content.text.indexOf("ยอด") > -1){
+    if(findKeyword(content.text, ["account balance","ยอด"])){
       reply = "You have 50,000,000 baht"
     }
     else{
       reply = 'Hello ' + content.text
     }
   }
-  else if(content.contentType == 8){
-    switch (content.contentMetadata.STKID){
-      case "4":
-        reply = "You know I can't resist that look..."
-        break;
-      case "13":
-        reply = "YEAH RIGHT!";
-        break;
-      case "2":
-        reply = "What are you smiling at?";
-        break;
-      case "10":
-        reply = "What have you been up to??";
-        break;
-      default:
-        reply = 'I like that sticker'
-        break;
-    }
+  else if(isContentTypeSticker(content.contentType)){
+    reply = stickerStandardReply(content.contentMetadata.STKID);
   }
 
   return reply
 }
 
-function generateReply(content){
-
-  if(content.contentType == 1 && content.text.indexOf("sticker") > -1){
-    return {
-        "to":[content.from],
-        'toChannel' : 1383378250,
-        "eventType" : "138311608800106203",
-        "content":{
-          'contentType': 8,
-          "contentMetadata":{
-            "STKID": "3",
-            "STKPKGID":"1",
-            "STKVER":"100"
-          },
-          "toType":1
-        }
-      };
-  }
-  
-  return {
-        "to":[content.from],
-        'toChannel' : 1383378250,
-        "eventType" : "138311608800106203",
-        "content":{
-          "contentType":1,
-          "toType":1,
-          "text": generateReplyMessage(content)
-        }
-      };
-
+function isValid(object) {
+  return !Object.keys(object).length;
 }
 
-function reply(requestContent){
+function returnSticker(content){
+  return isContentTypeText(content.contentType) && content.text.indexOf("sticker") > -1;
+}
 
-  if(isEmptyObject(requestContent)){
-    return -1;
-  }
+function stickerStandardReply(stickerId){
 
-  var channelId = requestContent.fromChannel
+  var stickerReplies = { "4": "You know I can't resist that look...",
+                         "13" : "I don't trust that...",
+                         "2" : "What are you smiling at?",
+                         "10" : "What have you been up to??"}
 
-  var post_data = generateReply(requestContent.content)
+  var reply = stickerReplies[stickerId];
+  if (!reply)
+    reply = 'I like that sticker';
 
-  // An object of options to indicate where to post to
-  var post_options = {
-      host: 'trialbot-api.line.me',
-      port: '443',
-      path: '/v1/events',
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json; charser=UTF-8',
-          'X-Line-ChannelID': config.ChannelId,
-          'X-Line-ChannelSecret': config.ChannelSecret,
-          'X-Line-Trusted-User-With-ACL': config.ChannelMID
+    return reply;
+}
+
+function findKeyword(content, keywords){
+  var keywordFound = false;
+  keywords.forEach(function(keyword){
+      if (content.indexOf(keyword) > -1){
+        keywordFound = true;
       }
+    });
+  return keywordFound;
+}
+function isContentTypeSticker(contentType){
+  return contentType == 8;
+}
+function isContentTypeText(contentType){
+  return contentType == 1;
+}
+
+function postRequestOptions(){
+  return {
+    host: config.LineAPI,
+    port: config.LineAPIPort,
+    path: config.LineAPIPath,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json; charser=UTF-8',
+      'X-Line-ChannelID': config.ChannelId,
+      'X-Line-ChannelSecret': config.ChannelSecret,
+      'X-Line-Trusted-User-With-ACL': config.ChannelMID
+    }
   };
+}
+function generateReply(content){
 
-  // Set up the request
-  var post_req = http.request(post_options, function(res) {
-      res.setEncoding('utf8');
-      res.on('data', function (chunk) {
-          console.log('Response: ' + JSON.stringify(chunk));
-      })
-      res.on('error', function(err){
-        console.log('Error: ', err);
-      })
-
-  });
-  // post the data
-  post_req.write(JSON.stringify(post_data));
-  post_req.end();
-
-  return 0;
-
+  if (returnSticker(content)){
+    return reply.generateSticker([content.from]);
+  }
+  else{
+    return reply.generateText([content.from], determineReplyMessage(content));
+  }
 }

@@ -12,6 +12,9 @@ var config = {
     ChannelId: process.env.ChannelId || '',
     ChannelSecret: process.env.ChannelSecret || '',
     ChannelMID: process.env.MID || '',
+    LineAPI: process.env.LineAPI || 'trialbot-api.line.me',
+    LineAPIPort: process.env.LineAPIPort || '443',
+    LineAPIPath: process.env.LineAPIPath || '/v1/events'
   },
 
   production: {
@@ -22,7 +25,10 @@ var config = {
     port: process.env.PORT || 8080,
     ChannelId: process.env.ChannelId || '',
     ChannelSecret: process.env.ChannelSecret || '',
-    ChannelMID: process.env.MID || ''
+    ChannelMID: process.env.MID || '',
+    LineAPI: process.env.LineAPI || 'trialbot-api.line.me',
+    LineAPIPort: process.env.LineAPIPort || '443',
+    LineAPIPath: process.env.LineAPIPath || '/v1/events'
     
   }
 };

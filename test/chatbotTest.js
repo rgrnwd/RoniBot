@@ -113,7 +113,7 @@ describe('Chatbot', function() {
 
      it('should send different reply when receive second recognised sticker', function(){
         
-        var text = "YEAH RIGHT!"
+        var text = "I don't trust that..."
 
         var response = chatbot.reply(generateRequestStickerContent("13"))
         assert(write.withArgs(generateExpectedResult(text)).calledOnce);
